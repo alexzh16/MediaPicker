@@ -42,6 +42,9 @@ final class FullscreenCellViewModel: ObservableObject {
                 videoSize = await getVideoSize(url)
             case .none:
                 break
+            case .some(.files):
+                print("FullscreenCellViewModel")
+                break
             }
         }
     }

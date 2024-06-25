@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FrameGetter: ViewModifier {
+struct MediaPickerFrameGetter: ViewModifier {
 
     @Binding var frame: CGRect
 
@@ -29,7 +29,7 @@ struct FrameGetter: ViewModifier {
 }
 
 internal extension View {
-    func frameGetter(_ frame: Binding<CGRect>) -> some View {
-        modifier(FrameGetter(frame: frame))
+    func mediaPickerFrameGetter(_ frame: Binding<CGRect>) -> some View {
+        modifier(MediaPickerFrameGetter(frame: frame))
     }
 }

@@ -22,13 +22,16 @@ extension URLMediaModel: MediaModelProtocol {
         if url.isVideoFile {
             return .video
         }
-        return nil
+        return .files
     }
 
     var duration: CGFloat? {
-        CMTimeGetSeconds(AVURLAsset(url: url).duration)
+        if mediaType == .video {
+            return CMTimeGetSeconds(AVURLAsset(url: url).duration)
+        }
+        return nil
     }
-
+    
     func getURL() async -> URL? {
         url
     }
@@ -39,6 +42,16 @@ extension URLMediaModel: MediaModelProtocol {
             return url
         case .video:
             return await url.getThumbnailURL()
+        case .files:
+            // Генерируем миниатюру для файла и сохраняем её в кэш или временную директорию
+            if let thumbnail = await ThumbnailGenerator.generateThumbnail(for: url, size: CGSize(width: 100, height: 100)),
+               let data = thumbnail.pngData() {
+                let tempDir = FileManager.default.temporaryDirectory
+                let thumbnailURL = tempDir.appendingPathComponent(UUID().uuidString).appendingPathExtension("png")
+                try? data.write(to: thumbnailURL)
+                return thumbnailURL
+            }
+            return nil
         case .none:
             return nil
         }
@@ -54,6 +67,12 @@ extension URLMediaModel: MediaModelProtocol {
             return try? Data(contentsOf: url)
         case .video:
             return await url.getThumbnailData()
+        case .files:
+            // Генерируем миниатюру для файла и возвращаем её данные
+            if let thumbnail = await ThumbnailGenerator.generateThumbnail(for: url, size: CGSize(width: 100, height: 100)) {
+                return thumbnail.pngData()
+            }
+            return nil
         case .none:
             return nil
         }

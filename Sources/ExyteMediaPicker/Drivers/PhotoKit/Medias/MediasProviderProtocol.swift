@@ -44,21 +44,21 @@ class BaseMediasProvider: MediasProviderProtocol {
         if let filterClosure = filterClosure {
             showLoading(true)
             cancellableTask = Task {
-                let serialQueue = DispatchQueue(label: "filterSerialQueue")
-                var result = [AssetMediaModel]()
-                await assets.asyncForEach {
-                    if cancellableTask?.isCancelled ?? false {
-                        return
-                    }
-                    if let media = await filterClosure(Media(source: $0)), let model = media.source as? AssetMediaModel {
-                        serialQueue.sync {
-                            result.append(model)
-                            assetMediaModelsPublisher.send(result)
+                        let serialQueue = DispatchQueue(label: "filterSerialQueue")
+                        var result = [AssetMediaModel]()
+                        for asset in assets {
+                            if cancellableTask?.isCancelled ?? false {
+                                return
+                            }
+                            if let media = await filterClosure(Media(source: asset)), let model = media.source as? AssetMediaModel {
+                                serialQueue.sync {
+                                    result.append(model)
+                                    assetMediaModelsPublisher.send(result)
+                                }
+                            }
                         }
+                        showLoading(false)
                     }
-                }
-                showLoading(false)
-            }
         } else if let massFilterClosure = massFilterClosure {
             showLoading(true)
             cancellableTask = Task {

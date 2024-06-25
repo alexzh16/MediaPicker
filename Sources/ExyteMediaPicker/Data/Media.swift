@@ -8,21 +8,22 @@ import Combine
 public enum MediaType {
     case image
     case video
+    case files
 }
 
-public struct Media: Identifiable, Equatable {
+public struct ExyteChatMedia: Identifiable, Equatable {
     public var id = UUID()
     internal let source: MediaModelProtocol
 
-    public static func == (lhs: Media, rhs: Media) -> Bool {
+    public static func == (lhs: ExyteChatMedia, rhs: ExyteChatMedia) -> Bool {
         lhs.id == rhs.id
     }
 }
 
-public extension Media {
+public extension ExyteChatMedia {
 
     var type: MediaType {
-        source.mediaType ?? .image
+        source.mediaType ?? .files
     }
 
     var duration: CGFloat? {
