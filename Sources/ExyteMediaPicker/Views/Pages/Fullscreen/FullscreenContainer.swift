@@ -54,7 +54,7 @@ struct FullscreenContainer: View {
         .onDisappear {
             currentFullscreenMedia = nil
         }
-        .onChange(of: selection) { newValue in
+        .onChange(of: selection) { newValue, _ in
             if let selectedMediaModel {
                 currentFullscreenMedia = Media(source: selectedMediaModel)
             }

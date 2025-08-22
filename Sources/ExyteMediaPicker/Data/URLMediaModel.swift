@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by Alisa Mylnikova on 12.07.2022.
 //
@@ -14,7 +14,7 @@ struct URLMediaModel {
 }
 
 extension URLMediaModel: MediaModelProtocol {
-
+    
     var mediaType: MediaType? {
         if url.isImageFile {
             return .image
@@ -24,7 +24,7 @@ extension URLMediaModel: MediaModelProtocol {
         }
         return .files
     }
-
+    
     var duration: CGFloat? {
         if mediaType == .video {
             return CMTimeGetSeconds(AVURLAsset(url: url).duration)
@@ -35,13 +35,15 @@ extension URLMediaModel: MediaModelProtocol {
     func getURL() async -> URL? {
         url
     }
-
+    
     func getThumbnailURL() async -> URL? {
         switch mediaType {
         case .image:
             return url
+            
         case .video:
             return await url.getThumbnailURL()
+            
         case .files:
             // Генерируем миниатюру для файла и сохраняем её в кэш или временную директорию
             if let thumbnail = await ThumbnailGenerator.generateThumbnail(for: url, size: CGSize(width: 100, height: 100)),
@@ -56,17 +58,19 @@ extension URLMediaModel: MediaModelProtocol {
             return nil
         }
     }
-
+        
     func getData() async throws -> Data? {
         try? Data(contentsOf: url)
     }
-
+    
     func getThumbnailData() async -> Data? {
         switch mediaType {
         case .image:
             return try? Data(contentsOf: url)
+            
         case .video:
             return await url.getThumbnailData()
+            
         case .files:
             // Генерируем миниатюру для файла и возвращаем её данные
             if let thumbnail = await ThumbnailGenerator.generateThumbnail(for: url, size: CGSize(width: 100, height: 100)) {
