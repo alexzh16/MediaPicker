@@ -9,7 +9,7 @@ import UIKit.UIImage
 
 @MainActor
 final class FullscreenCellViewModel: ObservableObject {
-
+   let logTAG = "FullscreenCellViewModel"
     let mediaModel: MediaModelProtocol
 
     @Published var image: UIImage? = nil
@@ -43,7 +43,7 @@ final class FullscreenCellViewModel: ObservableObject {
             case .none:
                 break
             case .some(.files):
-                print("FullscreenCellViewModel")
+               debugPrint("\(logTAG) \(#line) \(#function) FullscreenCellViewModel")
                 break
             }
         }

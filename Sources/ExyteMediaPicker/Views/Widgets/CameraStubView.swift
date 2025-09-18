@@ -6,36 +6,37 @@
 import SwiftUI
 
 struct CameraStubView: View {
-
-    let didPressCancel: () -> Void
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(.white)
-                .ignoresSafeArea()
-            
-            VStack {
-                Text("Camera")
-                    .font(.largeTitle)
-                Text("Unavailable on simulator. Use device for testing")
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
-                Button("Close") {
-                    didPressCancel()
-                }
-                .padding()
+   
+   let didPressCancel: () -> Void
+   
+   var body: some View {
+      ZStack {
+         RoundedRectangle(cornerRadius: 20)
+            .fill(.white)
+            .ignoresSafeArea()
+         
+         VStack {
+            Text("Camera")
+               .font(.largeTitle)
+            Text("Unavailable on simulator. Use device for testing")
+               .font(.title3)
+               .multilineTextAlignment(.center)
+            Button("Close") {
+               didPressCancel()
             }
-        }
-    }
+            .padding()
+         }
+      }
+   }
 }
 
 struct CameraStubView_Preview: PreviewProvider {
-    static var previews: some View {
-        CameraStubView {
-            debugPrint("close")
-        }
-    }
+   static var previews: some View {
+      let logTAG = "CameraStubView_Preview"
+      CameraStubView {
+         debugPrint("\(logTAG) \(#line) \(#function) close")
+      }
+   }
 }
 
 #endif
